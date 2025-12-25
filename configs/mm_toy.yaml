@@ -1,0 +1,19 @@
+dt: 1.0
+T: 3600.0
+
+mid0: 100.0
+sigma: 0.02
+
+intensity:
+  A: 1.2
+  k: 1.0
+
+strategy:
+  base_spread: 0.2
+  phi: 0.0
+  order_size: 0.01
+
+costs:
+  fee_bps: 1.0
+
+seed: 42
