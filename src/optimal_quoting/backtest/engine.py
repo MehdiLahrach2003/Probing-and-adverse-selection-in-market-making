@@ -1,4 +1,5 @@
 from __future__ import annotations
+from optimal_quoting.strategy.avellaneda_stoikov import ASStrategyConfig, compute_as_quotes
 from optimal_quoting.strategy.probing import ProbingConfig, compute_probing_quotes
 from dataclasses import dataclass
 import numpy as np
@@ -25,6 +26,8 @@ class MMParams:
     probing_p: float = 0.0
     probing_jitter: float = 0.0
     probing_widen_only: bool = True
+    policy: str = "baseline"   # "baseline" | "probing" | "as"
+    gamma: float = 0.1
 
 
 
@@ -47,11 +50,25 @@ def run_mm_toy(p: MMParams) -> pd.DataFrame:
         m = float(mid[t])
         if p.probing_p > 0.0 and p.probing_jitter > 0.0:
             qcfg = ProbingConfig(p_explore=p.probing_p, jitter=p.probing_jitter, widen_only=p.probing_widen_only)
-            quotes = compute_probing_quotes(m, q, p.base_spread, p.phi, qcfg, rng)
+            t_now = t * p.dt
+            if p.policy == "as":
+                quotes = compute_as_quotes(
+                mid=m,
+                q=q,
+                t=t_now,
+                T=p.T,
+                sigma=p.sigma,
+                k=p.k,
+                cfg=ASStrategyConfig(gamma=p.gamma),
+                )
+            elif p.policy == "probing" and p.probing_p > 0.0 and p.probing_jitter > 0.0:
+                qcfg = ProbingConfig(p_explore=p.probing_p, jitter=p.probing_jitter, widen_only=p.probing_widen_only)
+                quotes = compute_probing_quotes(m, q, p.base_spread, p.phi, qcfg, rng)
+            else:
+                quotes = compute_quotes(m, q, p.base_spread, p.phi)
+
         else:
-            quotes = compute_quotes(m, q, p.base_spread, p.phi)
-
-
+                quotes = compute_quotes(m, q, p.base_spread, p.phi)
         lam_bid = intensity_exp(p.A, p.k, quotes.delta_bid)
         lam_ask = intensity_exp(p.A, p.k, quotes.delta_ask)
 
