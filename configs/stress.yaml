@@ -1,0 +1,31 @@
+# Stress test configuration: robustness across (A, k) regimes.
+out_csv: "reports/stress_results.csv"
+
+seeds: [0, 1, 2, 3, 4]
+
+# Regimes for intensity parameters (A, k)
+A_grid: [0.8, 1.2, 1.6]
+k_grid: [0.3, 1.0, 2.0]
+
+# Simulation horizon (keep moderate for CI/local)
+T: 20000.0
+dt: 1.0
+
+# Mid price / spread settings
+mid0: 100.0
+sigma: 0.02
+base_spread: 0.2
+
+# Strategy comparison
+policies: ["baseline", "probing", "as"]
+
+# Probing configuration
+probing_p: 0.20
+probing_jitter: 0.05
+probing_widen_only: true
+
+# Avellaneda–Stoikov params (toy)
+gamma: 0.1
+order_size: 0.01
+fee_bps: 0.0
+phi: 0.0
