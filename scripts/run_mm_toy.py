@@ -10,19 +10,28 @@ from optimal_quoting.backtest.engine import MMParams, run_mm_toy
 
 def main() -> None:
     cfg = yaml.safe_load(Path("configs/mm_toy.yaml").read_text(encoding="utf-8"))
+    mm = cfg["mm_params"]
 
     p = MMParams(
-        dt=float(cfg["dt"]),
-        T=float(cfg["T"]),
-        mid0=float(cfg["mid0"]),
-        sigma=float(cfg["sigma"]),
-        A=float(cfg["intensity"]["A"]),
-        k=float(cfg["intensity"]["k"]),
-        base_spread=float(cfg["strategy"]["base_spread"]),
-        phi=float(cfg["strategy"]["phi"]),
-        order_size=float(cfg["strategy"]["order_size"]),
-        fee_bps=float(cfg["costs"]["fee_bps"]),
-        seed=int(cfg["seed"]),
+        dt=float(mm.get("dt", 1.0)),
+        T=float(mm.get("T", 20000.0)),
+        mid0=float(mm.get("mid0", 100.0)),
+        sigma=float(mm.get("sigma", 0.02)),
+
+        # intensity true params (used by simulator)
+        A=float(mm.get("A", 1.2)),
+        k=float(mm.get("k", 1.0)),
+
+        # quoting / strategy base params
+        base_spread=float(mm.get("base_spread", 0.2)),
+        phi=float(mm.get("phi", 0.0)),
+        order_size=float(mm.get("order_size", 0.01)),
+
+        # costs
+        fee_bps=float(mm.get("fee_bps", 0.0)),
+
+        # runtime
+        seed=int(mm.get("seed", 0)),
     )
 
     df = run_mm_toy(p)
