@@ -100,3 +100,17 @@ def main() -> None:
     labels = [r[0] for r in runs]
     ks = [r[2] for r in runs]
 
+    plt.figure()
+    plt.bar(labels, ks)
+    plt.axhline(base.k, linestyle="--")
+    plt.title("k_hat: baseline vs probing")
+    plt.ylabel("k_hat")
+    plt.tight_layout()
+    plt.savefig("reports/figures/probing_khat_comparison.png")
+    plt.close()
+
+    print("Saved reports/figures/probing_khat_comparison.png")
+
+
+if __name__ == "__main__":
+    main()
