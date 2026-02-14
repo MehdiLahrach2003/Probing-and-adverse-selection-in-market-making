@@ -162,3 +162,17 @@ def main() -> None:
 
     run_engine = _find_engine_runner()
 
+    rows = []
+    for A, k, seed, policy in itertools.product(cfg["A_grid"], cfg["k_grid"], cfg["seeds"], cfg["policies"]):
+        p = make_params(cfg, A=A, k=k, seed=seed, policy=policy)
+        df = run_engine(p)
+        summary = summarize_df(df)
+        rows.append({"A": A, "k": k, "seed": seed, "policy": policy, **summary})
+
+    res = pd.DataFrame(rows)
+    res.to_csv(out_path, index=False)
+    print(f"Saved {out_path}")
+
+
+if __name__ == "__main__":
+    main()
