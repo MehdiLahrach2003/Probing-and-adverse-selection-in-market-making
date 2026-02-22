@@ -104,3 +104,11 @@ def main() -> None:
     plt.savefig("reports/figures/intensity_profile_nll.png")
     plt.close()
 
+    print("Saved plots:")
+    print(" - reports/figures/intensity_fit.png")
+    print(" - reports/figures/intensity_empirical_fit.png")
+    print(" - reports/figures/intensity_profile_nll.png")
+
+
+if __name__ == "__main__":
+    main()
