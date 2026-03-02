@@ -1,0 +1,33 @@
+base:
+  dt: 0.1
+  T: 20000.0
+  mid0: 100.0
+  sigma: 0.006
+
+  intensity:
+    A: 1.2
+    k: 1.0
+
+  strategy:
+    base_spread: 0.4
+    phi: 0.0
+    order_size: 0.01
+
+  costs:
+    fee_bps: 0.0
+
+seeds: [1, 2, 3, 4, 5]
+
+policies:
+  baseline:
+    policy: "baseline"
+
+  probing:
+    policy: "probing"
+    probing_p: 0.20
+    probing_jitter: 0.80
+    probing_widen_only: true
+
+  as:
+    policy: "as"
+    gamma: 0.10
