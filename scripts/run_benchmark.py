@@ -13,7 +13,9 @@ from optimal_quoting.metrics.performance import performance_summary
 def main() -> None:
     cfg = yaml.safe_load(Path("configs/benchmark.yaml").read_text(encoding="utf-8"))
 
- 
+    base = cfg["base"]
+    seeds = cfg["seeds"]
+    policies = cfg["policies"]
 
     rows = []
 
