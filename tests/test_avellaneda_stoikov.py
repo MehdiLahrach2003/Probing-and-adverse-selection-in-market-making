@@ -23,4 +23,4 @@ def test_as_inventory_skew_direction():
 
     # If q<0 (short), ask should tighten, bid should widen
     assert dan < da0
-    assert dbn > db
+    assert dbn > db0
