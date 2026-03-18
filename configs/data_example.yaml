@@ -1,0 +1,5 @@
+data:
+  path: "data/raw/example_top.csv"
+  ts_col: "timestamp"
+  bid_col: "bid"
+  ask_col: "ask"
