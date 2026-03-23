@@ -1,4 +1,5 @@
 import pytest
+import numpy as np 
 
 from optimal_quoting.model.avellaneda_stoikov import ASParams, as_deltas
 
