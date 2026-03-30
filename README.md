@@ -1,4 +1,4 @@
-# Optimal Quoting
+# Probing and adverse selection in market making 
 
 Research-oriented project on **optimal market making and quoting** using
 **stochastic control**, **order-flow intensity models**, and **inventory risk management**.
