@@ -107,4 +107,4 @@ Planned extensions include:
 ## Author
 
 **Mehdi Lahrach**  
-M1 Applied Mathematics and Statistics — Quantitative Finance
+M1 Applied Mathematics and Statistics — Quantitative Finance - PSL University
