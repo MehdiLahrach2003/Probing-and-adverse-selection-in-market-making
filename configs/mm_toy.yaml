@@ -1,39 +1,171 @@
+# =====================================================================
+# Ce fichier définit la configuration principale du scénario "toy"
+# de market making.
+#
+# Il contient :
+# - les paramètres du marché simulé,
+# - les paramètres de la stratégie de base,
+# - les paramètres par défaut du probing,
+# - la grille d’expériences pour la probing frontier,
+# - les paramètres de calibration de l’intensité.
+#
+# C’est donc un fichier central du projet.
+# =====================================================================
+
+
+
 mm_params:
+  # -------------------------------------------------------------------
+  # Paramètres de temps
+  # -------------------------------------------------------------------
+
+  # Pas de temps de la simulation
+  # Ici : 1.0 signifie qu’on avance d’une unité de temps à chaque étape.
   dt: 1.0
+
+  # Horizon total de simulation
+  # Ici : 20000 pas environ, donc simulation assez longue
+  # pour obtenir suffisamment de données.
   T: 20000.0
+
+  # Mid price initial
+  # Prix central du marché au début de la simulation.
   mid0: 100.0
+
+  # Volatilité du mid à chaque pas
+  # Plus sigma est grand, plus le mid fluctue.
   sigma: 0.02
 
-  # intensity true params (used by simulator)
+
+  # -------------------------------------------------------------------
+  # Paramètres vrais du modèle d’intensité
+  # Ces paramètres sont utilisés par le simulateur pour générer
+  # les fills.
+  # -------------------------------------------------------------------
+
+  # Intensité maximale quand delta = 0
+  # Autrement dit, vitesse maximale d’exécution
+  # si la quote est collée au mid.
   A: 1.2
+
+  # Vitesse de décroissance de l’intensité
+  # Plus k est grand, plus l’intensité chute rapidement
+  # lorsque delta augmente.
   k: 1.0
 
-  # quoting / strategy base params
+
+  # -------------------------------------------------------------------
+  # Paramètres de la stratégie de quoting de base
+  # -------------------------------------------------------------------
+
+  # Spread de base utilisé par la stratégie baseline
+  # La baseline part typiquement de :
+  # delta_bid = base_spread / 2
+  # delta_ask = base_spread / 2
   base_spread: 0.2
+
+  # Coefficient de skew d’inventaire
+  # Si phi > 0 :
+  # - quand inventory > 0, la stratégie modifie ses quotes
+  #   pour réduire le risque d’inventaire.
+  # Ici phi = 0 : pas de correction d’inventaire dans la baseline.
   phi: 0.0
+
+  # Taille d’un ordre exécuté
+  # Chaque fill modifie l’inventaire de cette quantité.
   order_size: 0.01
 
-  # costs
+
+  # -------------------------------------------------------------------
+  # Coûts de transaction
+  # -------------------------------------------------------------------
+
+  # Frais en basis points
+  # Ici fee_bps = 0.0 signifie :
+  # aucun coût de transaction dans cette simulation.
   fee_bps: 0.0
 
-  # runtime
+
+  # -------------------------------------------------------------------
+  # Paramètres d’exécution / runtime
+  # -------------------------------------------------------------------
+
+  # Seed aléatoire pour rendre la simulation reproductible.
   seed: 0
+
+  # Politique utilisée par défaut
+  # Ici : "baseline"
+  # Donc si un script lit simplement mm_params sans surcharge,
+  # il exécutera la stratégie baseline.
   policy: baseline
 
-  # probing defaults (will be overridden in frontier sweep)
+
+  # -------------------------------------------------------------------
+  # Paramètres de probing par défaut
+  # -------------------------------------------------------------------
+
+  # Probabilité d’exploration
+  # Ici 0.0 → pas de probing par défaut.
   probing_p: 0.0
+
+  # Amplitude maximale de la perturbation des deltas
+  # Ici 0.0 → aucune perturbation.
   probing_jitter: 0.0
+
+  # Si true :
+  # le probing n’élargit les deltas que vers l’extérieur
+  # (perturbations non négatives).
   probing_widen_only: true
 
-  # optional (if your MMParams has gamma; keep if it exists, remove otherwise)
+
+  # -------------------------------------------------------------------
+  # Paramètre de la stratégie Avellaneda–Stoikov
+  # -------------------------------------------------------------------
+
+  # Gamma = aversion au risque
+  # Plus gamma est grand, plus la stratégie AS est prudente
+  # vis-à-vis du risque d’inventaire.
+  #
+  # Ce paramètre n’est utile que si la policy = "as".
   gamma: 0.1
 
+
+
+# =====================================================================
+# Grille d’expériences pour la probing frontier
+#
+# Cette section est utilisée dans run_frontier.py pour tester
+# plusieurs combinaisons de paramètres de probing.
+# =====================================================================
 frontier:
+
+  # Liste des probabilités d’exploration à tester
+  # Chaque valeur correspond à une fréquence de probing.
   p_grid: [0.0, 0.05, 0.10, 0.20, 0.30]
+
+  # Liste des amplitudes de perturbation à tester
+  # Plus jitter est grand, plus l’exploration modifie les quotes.
   jitter_grid: [0.0, 0.02, 0.05, 0.10]
+
+  # Liste des seeds utilisées pour répéter les expériences
+  # et moyenner les résultats.
   seeds: [0, 1, 2, 3, 4]
 
-intensity_calibration:
-  k_bounds: [0.0, 5.0]
-  grid_size: 300
 
+
+# =====================================================================
+# Paramètres de calibration du modèle d’intensité
+#
+# Cette section est utilisée notamment dans calibrate_intensity.py
+# et run_frontier.py.
+# =====================================================================
+intensity_calibration:
+
+  # Bornes de recherche du paramètre k dans le MLE
+  # Ici, on suppose que k se trouve entre 0 et 5.
+  k_bounds: [0.0, 5.0]
+
+  # Taille de la grille initiale de recherche pour le MLE
+  # Plus ce nombre est grand, plus la recherche est fine,
+  # mais plus elle est coûteuse.
+  grid_size: 300
