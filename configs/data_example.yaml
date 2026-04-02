@@ -1,5 +1,38 @@
+# =====================================================================
+# Configuration pour charger et analyser des données de marché réelles
+#
+# Objectif :
+# - lire un fichier CSV contenant des données de carnet (top of book)
+# - standardiser les colonnes
+# - permettre ensuite d’ajouter des features (mid, spread, returns)
+#
+# Ce fichier sert principalement à :
+#   inspect_data.py
+# =====================================================================
+
+
+
 data:
+
+  # -------------------------------------------------------------------
+  # Chemin vers le fichier CSV contenant les données de marché
+  # -------------------------------------------------------------------
+
+  # Fichier contenant les quotes (bid / ask) au cours du temps
+  # Exemple : données issues d’un exchange ou d’un fournisseur de données
   path: "data/raw/example_top.csv"
+
+
+
+  # -------------------------------------------------------------------
+  # Nom des colonnes dans le CSV
+  # -------------------------------------------------------------------
+
+  # Colonne contenant les timestamps
   ts_col: "timestamp"
+
+  # Colonne contenant le bid (meilleur prix acheteur)
   bid_col: "bid"
+
+  # Colonne contenant l’ask (meilleur prix vendeur)
   ask_col: "ask"
