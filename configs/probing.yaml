@@ -1,10 +1,58 @@
+# =====================================================================
+# Configuration pour une expérience simple de probing
+#
+# Ce fichier ne décrit pas tout le marché à lui seul.
+# Il part d’une configuration de base existante,
+# puis ajoute :
+# - les paramètres de probing
+# - les paramètres de calibration MLE
+#
+# Il sert principalement à :
+#   run_probing_experiment.py
+# =====================================================================
+
+
+
+# =====================================================================
+# Configuration de base du monde simulé
+# =====================================================================
+
+# On part du fichier mm_toy.yaml,
+# qui contient les paramètres du marché simulé,
+# les paramètres de stratégie, etc.
 base_config: "configs/mm_toy.yaml"
 
+
+
+# =====================================================================
+# Paramètres de la stratégie probing
+# =====================================================================
 probing:
+
+  # Probabilité d’exploration
+  # Ici : 20% du temps, on applique une perturbation des deltas
   p_explore: 0.20
+
+  # Amplitude maximale de la perturbation
+  # Ici : 0.80, ce qui correspond à une exploration assez forte
   jitter: 0.80
+
+  # Si true :
+  # le probing ne peut qu’élargir les deltas
+  # (exploration prudente)
   widen_only: true
 
+
+
+# =====================================================================
+# Paramètres de calibration du modèle d’intensité
+# =====================================================================
 calibration:
+
+  # Intervalle de recherche pour le paramètre k dans le MLE
+  # On suppose que le vrai k se trouve entre 0 et 5.
   k_bounds: [0.0, 5.0]
+
+  # Taille de la grille initiale utilisée dans la recherche de k
+  # Plus grand → plus précis mais plus coûteux
   grid_size: 300
