@@ -1,33 +1,128 @@
+# =====================================================================
+# Configuration pour l’expérience de benchmark des stratégies
+#
+# Objectif :
+# comparer plusieurs stratégies (baseline, probing, AS)
+# dans un même environnement de marché.
+#
+# On fixe le "monde" (marché simulé),
+# puis on change uniquement la stratégie.
+# =====================================================================
+
+
+
+# =====================================================================
+# Paramètres de base du marché simulé
+# =====================================================================
 base:
+
+  # -------------------------------------------------------------------
+  # Paramètres temporels
+  # -------------------------------------------------------------------
+
+  # Pas de temps plus petit que dans mm_toy → simulation plus fine
   dt: 0.1
+
+  # Horizon total (long pour stabilité statistique)
   T: 20000.0
+
+  # Mid price initial
   mid0: 100.0
+
+  # Volatilité plus faible (car dt plus petit)
   sigma: 0.006
 
+
+  # -------------------------------------------------------------------
+  # Paramètres vrais de l’intensité
+  # -------------------------------------------------------------------
   intensity:
+
+    # Intensité maximale
     A: 1.2
+
+    # Vitesse de décroissance
     k: 1.0
 
+
+  # -------------------------------------------------------------------
+  # Paramètres de la stratégie baseline
+  # -------------------------------------------------------------------
   strategy:
+
+    # Spread plus large que dans mm_toy
+    # → moins de trades mais plus de marge
     base_spread: 0.4
+
+    # Pas de gestion d’inventaire
     phi: 0.0
+
+    # Taille des ordres
     order_size: 0.01
 
+
+  # -------------------------------------------------------------------
+  # Coûts de transaction
+  # -------------------------------------------------------------------
   costs:
+
+    # Aucun coût ici
     fee_bps: 0.0
 
+
+
+# =====================================================================
+# Seeds pour répéter les expériences
+# =====================================================================
+
+# On répète la simulation plusieurs fois
+# pour lisser l’aléatoire
 seeds: [1, 2, 3, 4, 5]
 
+
+
+# =====================================================================
+# Définition des stratégies à comparer
+# =====================================================================
 policies:
+
+  # -------------------------------------------------------------------
+  # 1. Stratégie baseline
+  # -------------------------------------------------------------------
   baseline:
+
+    # Quotes simples (sans exploration, sans AS)
     policy: "baseline"
 
+
+
+  # -------------------------------------------------------------------
+  # 2. Stratégie probing
+  # -------------------------------------------------------------------
   probing:
+
+    # Active le probing
     policy: "probing"
+
+    # Probabilité d’exploration (20%)
     probing_p: 0.20
+
+    # Amplitude de perturbation (très élevée ici)
+    # → exploration agressive
     probing_jitter: 0.80
+
+    # Exploration uniquement vers l’extérieur
     probing_widen_only: true
 
+
+
+  # -------------------------------------------------------------------
+  # 3. Stratégie Avellaneda–Stoikov (AS)
+  # -------------------------------------------------------------------
   as:
+
+    # Active la stratégie théorique optimale
     policy: "as"
+
+    # Aversion au risque
     gamma: 0.10
