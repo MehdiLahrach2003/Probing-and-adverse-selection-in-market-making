@@ -1,29 +1,84 @@
+# =====================================================================
+# Workflow CI (Continuous Integration)
+#
+# Ce fichier définit un pipeline automatique qui :
+# - installe l’environnement Python
+# - installe les dépendances du projet
+# - lance les tests
+#
+# Il est exécuté automatiquement par GitHub Actions
+# à chaque push ou pull request sur la branche main.
+# =====================================================================
+
+
+
+# Nom du workflow (visible dans GitHub)
 name: CI
 
+
+
+# =====================================================================
+# Déclencheurs du workflow
+# =====================================================================
 on:
+
+  # À chaque push sur la branche main
   push:
     branches: [ "main" ]
+
+  # À chaque pull request vers main
   pull_request:
     branches: [ "main" ]
 
+
+
+# =====================================================================
+# Définition des jobs
+# =====================================================================
 jobs:
+
   test:
+
+    # Machine utilisée (serveur Linux GitHub)
     runs-on: ubuntu-latest
 
+
+
     steps:
+
+      # ---------------------------------------------------------------
+      # Étape 1 : récupérer le code du repo
+      # ---------------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v4
 
+
+
+      # ---------------------------------------------------------------
+      # Étape 2 : installer Python
+      # ---------------------------------------------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+
+
+      # ---------------------------------------------------------------
+      # Étape 3 : installer les dépendances
+      # ---------------------------------------------------------------
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+
+          # Installe ton projet + dépendances dev (pytest, ruff, etc.)
           pip install -e ".[dev]"
 
+
+
+      # ---------------------------------------------------------------
+      # Étape 4 : lancer les tests
+      # ---------------------------------------------------------------
       - name: Run tests
         run: |
           pytest -q
