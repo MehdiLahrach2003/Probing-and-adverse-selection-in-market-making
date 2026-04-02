@@ -1,19 +1,85 @@
+# =====================================================================
+# Configuration pour l’expérience "probing frontier"
+#
+# Ce fichier définit uniquement :
+# - le monde simulé de base
+# - les paramètres d’intensité
+#
+# Les paramètres de probing (p_explore, jitter) ne sont PAS ici :
+# ils sont générés dynamiquement dans run_frontier.py
+# via des grilles.
+# =====================================================================
+
+
+
 mm_params:
+  # -------------------------------------------------------------------
+  # Paramètres temporels
+  # -------------------------------------------------------------------
+
+  # Pas de temps de la simulation
   dt: 1.0
+
+  # Horizon total de simulation
+  # Simulation longue pour avoir suffisamment de données
   T: 20000
+
+  # Mid price initial
   mid0: 100.0
+
+  # Volatilité du prix
   sigma: 0.02
 
+
+  # -------------------------------------------------------------------
+  # Paramètres vrais du modèle d’intensité
+  # -------------------------------------------------------------------
+
+  # Intensité maximale
+  # Fréquence maximale de trades quand delta = 0
   A: 1.2
+
+  # Vitesse de décroissance
+  # Paramètre clé qu’on cherche à estimer avec MLE
   k: 1.0
+
+
+  # -------------------------------------------------------------------
+  # Paramètres de la stratégie baseline
+  # -------------------------------------------------------------------
+
+  # Spread de base utilisé pour les quotes
   base_spread: 0.2
 
+  # Paramètre de gestion d’inventaire
+  # Ici nul → stratégie neutre
   phi: 0.0
+
+  # Taille des ordres exécutés
   order_size: 0.01
+
+  # Coût de transaction (en bps)
   fee_bps: 0.0
 
+
+  # -------------------------------------------------------------------
+  # Paramètres d’exécution
+  # -------------------------------------------------------------------
+
+  # Seed pour reproductibilité
   seed: 0
+
+  # Politique par défaut
+  # Ici baseline → sera remplacée dynamiquement
   policy: baseline
 
+
+
+# =====================================================================
+# Paramètres de calibration du modèle d’intensité
+# =====================================================================
 intensity:
+
+  # Taille de la grille de recherche pour le MLE
+  # Plus grand → plus précis mais plus lent
   grid_size: 300
