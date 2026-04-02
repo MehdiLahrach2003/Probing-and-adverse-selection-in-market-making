@@ -1,31 +1,131 @@
-# Stress test configuration: robustness across (A, k) regimes.
+# =====================================================================
+# Configuration du stress test
+#
+# Objectif :
+# tester la robustesse des stratégies de market making
+# lorsqu’on change le régime de marché.
+#
+# Ici, on fait varier les paramètres d’intensité :
+# - A : niveau global de fréquence des fills
+# - k : vitesse de décroissance de l’intensité
+#
+# Le script run_stress.py va lancer toutes les combinaisons :
+#   A × k × seed × policy
+# et sauvegarder les résultats dans un CSV.
+# =====================================================================
+
+
+
+# =====================================================================
+# Fichier de sortie
+# =====================================================================
+
+# Chemin du CSV final contenant tous les résultats du stress test
 out_csv: "reports/stress_results.csv"
 
+
+
+# =====================================================================
+# Seeds aléatoires
+# =====================================================================
+
+# On répète les expériences sur plusieurs seeds
+# pour lisser l’aléatoire et éviter des conclusions
+# basées sur une seule trajectoire.
 seeds: [0, 1, 2, 3, 4]
 
-# Regimes for intensity parameters (A, k)
+
+
+# =====================================================================
+# Grille des régimes de marché : paramètres vrais de l’intensité
+# =====================================================================
+
+# A mesure le niveau global de l’intensité.
+# Plus A est grand :
+# → plus les fills sont fréquents
 A_grid: [0.8, 1.2, 1.6]
+
+# k mesure la vitesse de décroissance de l’intensité
+# quand delta augmente.
+# Plus k est grand :
+# → plus il est coûteux de s’éloigner du mid
+# → l’intensité chute plus vite
 k_grid: [0.3, 1.0, 2.0]
 
-# Simulation horizon (keep moderate for CI/local)
+
+
+# =====================================================================
+# Paramètres de simulation
+# =====================================================================
+
+# Horizon total
+# Assez long pour observer des effets stables,
+# mais pas trop long pour rester exécutable rapidement.
 T: 20000.0
+
+# Pas de temps
 dt: 1.0
 
-# Mid price / spread settings
+
+
+# =====================================================================
+# Paramètres du mid et du spread
+# =====================================================================
+
+# Prix initial
 mid0: 100.0
+
+# Volatilité du mid
 sigma: 0.02
+
+# Spread de base de la stratégie baseline
 base_spread: 0.2
 
-# Strategy comparison
+
+
+# =====================================================================
+# Stratégies à comparer
+# =====================================================================
+
+# Liste des politiques testées dans chaque régime de marché
 policies: ["baseline", "probing", "as"]
 
-# Probing configuration
+
+
+# =====================================================================
+# Paramètres de probing
+# =====================================================================
+
+# Probabilité d’exploration pour la stratégie probing
 probing_p: 0.20
+
+# Amplitude de perturbation du probing
 probing_jitter: 0.05
+
+# Si true :
+# la stratégie probing ne fait qu’élargir les deltas
 probing_widen_only: true
 
-# Avellaneda–Stoikov params (toy)
+
+
+# =====================================================================
+# Paramètres de la stratégie Avellaneda–Stoikov
+# =====================================================================
+
+# Gamma = aversion au risque
 gamma: 0.1
+
+
+
+# =====================================================================
+# Paramètres d’exécution
+# =====================================================================
+
+# Taille d’un ordre exécuté
 order_size: 0.01
+
+# Coûts de transaction
 fee_bps: 0.0
+
+# Paramètre de skew d’inventaire de la baseline
 phi: 0.0
