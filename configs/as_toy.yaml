@@ -1,23 +1,102 @@
+# =====================================================================
+# Configuration pour tester uniquement la stratégie Avellaneda–Stoikov
+#
+# Objectif :
+# observer le comportement de la stratégie AS seule,
+# sans comparaison avec baseline ou probing.
+#
+# Utile pour :
+# - visualiser la courbe d’equity
+# - comprendre son comportement
+# - vérifier qu’elle fonctionne correctement
+# =====================================================================
+
+
+
+# =====================================================================
+# Paramètres temporels
+# =====================================================================
+
+# Pas de temps fin
+# → simulation plus précise
 dt: 0.1
+
+# Horizon total
+# → simulation longue pour stabiliser les résultats
 T: 20000.0
 
+
+
+# =====================================================================
+# Paramètres du marché (mid price)
+# =====================================================================
+
+# Prix initial
 mid0: 100.0
+
+# Volatilité plus faible car dt plus petit
 sigma: 0.006
 
+
+
+# =====================================================================
+# Paramètres vrais du modèle d’intensité
+# =====================================================================
 intensity:
+
+  # Intensité maximale
   A: 1.2
+
+  # Vitesse de décroissance
   k: 1.0
 
+
+
+# =====================================================================
+# Paramètres de base de quoting
+# (moins utilisés ici car AS calcule ses propres deltas)
+# =====================================================================
 strategy:
+
+  # Spread de base (fallback éventuel)
   base_spread: 0.4
+
+  # Pas de skew inventaire pour baseline
   phi: 0.0
+
+  # Taille des ordres
   order_size: 0.01
 
+
+
+# =====================================================================
+# Coûts de transaction
+# =====================================================================
 costs:
+
+  # Aucun coût ici
   fee_bps: 0.0
 
+
+
+# =====================================================================
+# Politique utilisée : Avellaneda–Stoikov
+# =====================================================================
 policy:
+
+  # Active la stratégie AS
   name: "as"
+
+  # Gamma = aversion au risque
+  # Plus gamma est grand :
+  # → plus la stratégie évite de prendre de l’inventaire
   gamma: 0.10
 
+
+
+# =====================================================================
+# Seed aléatoire
+# =====================================================================
+
+# Permet de reproduire exactement la simulation
 seed: 42
