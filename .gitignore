@@ -19,7 +19,6 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-reports/figures/*
 !reports/figures/.gitkeep
 
 # Experiment outputs
