@@ -1,5 +1,5 @@
 """ 
-Ce script seert à charger des configurations d'expériences. 
+Ce script sert à charger des configurations d'expériences. 
 
 Les paramètres du projet (intensité, horizon, paramètres de probing, etc.) ne sont pas codés en dur
 dans le Python, mais stockés dans des fichiers .yaml
