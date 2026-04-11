@@ -1,5 +1,5 @@
 [project]
-name = "optimal-quoting"
+name = "Probing and adverse selection in market making"
 version = "0.1.0"
 description = "Stochastic control approach to optimal market making and quoting"
 readme = "README.md"
